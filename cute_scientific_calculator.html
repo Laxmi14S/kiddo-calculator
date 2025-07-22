@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kiddo Calculator 🧸</title>
+
+  <!-- Web App Manifest (inline for PWA support) -->
+  <link rel="manifest" href="data:application/manifest+json,{
+    &quot;name&quot;:&quot;Kiddo Calculator&quot;,
+    &quot;short_name&quot;:&quot;Calculator&quot;,
+    &quot;start_url&quot;:&quot;.&quot;,
+    &quot;display&quot;:&quot;standalone&quot;,
+    &quot;background_color&quot;:&quot;#ffffff&quot;,
+    &quot;theme_color&quot;:&quot;#ffecf0&quot;,
+    &quot;icons&quot;:[{&quot;src&quot;:&quot;https://cdn-icons-png.flaticon.com/512/854/854894.png&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/png&quot;}]
+  }" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(145deg, #ffecf0, #d0f4ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff6f91;
+      margin-bottom: 0.5rem;
+    }
+
+    #display {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 15px;
+      text-align: right;
+      margin-bottom: 1rem;
+      background-color: #f9f9f9;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    button {
+      padding: 1rem;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      background-color: #ffdee9;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    button:hover {
+      background-color: #ffcbf2;
+      transform: scale(1.05);
+    }
+
+    button[title]::after {
+      content: attr(title);
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffe6f7;
+      color: #333;
+      padding: 4px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 1;
+    }
+
+    button:hover[title]::after {
+      opacity: 1;
+    }
+
+    @media (max-width: 500px) {
+      button {
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+
+      #display {
+        font-size: 1.2rem;
+        padding: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>🧸 Kiddo Calculator 🎨</h2>
+    <input type="text" id="display" readonly />
+    <div class="buttons">
+      <button title="Clear All" onclick="clearDisplay()">🧹</button>
+      <button title="Percent" onclick="append('%')">%</button>
+      <button title="Backspace" onclick="backspace()">⬅️</button>
+      <button title="Divide" onclick="append('/')">➗</button>
+
+      <button title="Seven" onclick="append('7')">7</button>
+      <button title="Eight" onclick="append('8')">8</button>
+      <button title="Nine" onclick="append('9')">9</button>
+      <button title="Multiply" onclick="append('*')">✖️</button>
+
+      <button title="Four" onclick="append('4')">4</button>
+      <button title="Five" onclick="append('5')">5</button>
+      <button title="Six" onclick="append('6')">6</button>
+      <button title="Subtract" onclick="append('-')">➖</button>
+
+      <button title="One" onclick="append('1')">1</button>
+      <button title="Two" onclick="append('2')">2</button>
+      <button title="Three" onclick="append('3')">3</button>
+      <button title="Add" onclick="append('+')">➕</button>
+
+      <button title="Zero" onclick="append('0')">0</button>
+      <button title="Decimal Point" onclick="append('.')">.</button>
+      <button title="Calculate Result" onclick="calculate()">🎯</button>
+      <button title="Power (x^y)" onclick="append('**')">^</button>
+    </div>
+  </div>
+
+  <script>
+    function append(char) {
+      document.getElementById('display').value += char;
+    }
+
+    function clearDisplay() {
+      document.getElementById('display').value = '';
+    }
+
+    function backspace() {
+      let current = document.getElementById('display').value;
+      document.getElementById('display').value = current.slice(0, -1);
+    }
+
+    function calculate() {
+      try {
+        document.getElementById('display').value = eval(document.getElementById('display').value);
+      } catch {
+        document.getElementById('display').value = 'Error';
+      }
+    }
+
+    // Service Worker Inline (for offline use)
+    if ('serviceWorker' in navigator) {
+      const sw = URL.createObjectURL(new Blob([`
+        self.addEventListener('install', event => {
+          event.waitUntil(
+            caches.open('kiddo-cache').then(cache => {
+              return cache.addAll(['.']);
+            })
+          );
+        });
+        self.addEventListener('fetch', event => {
+          event.respondWith(
+            caches.match(event.request).then(response => response || fetch(event.request))
+          );
+        });
+      `], { type: 'text/javascript' }));
+      navigator.serviceWorker.register(sw);
+    }
+  </script>
+</body>
+</html>
