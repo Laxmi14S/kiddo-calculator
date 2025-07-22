@@ -2,7 +2,6 @@ self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open('kiddo-calculator-cache').then(function (cache) {
       return cache.addAll([
-        '/',
         '/kiddo-calculator/',
         '/kiddo-calculator/index.html',
         '/kiddo-calculator/style.css',
