@@ -1,22 +1,21 @@
-self.addEventListener('install', function (e) {
+self.addEventListener("install", (e) => {
   e.waitUntil(
-    caches.open('kiddo-calculator-cache').then(function (cache) {
+    caches.open("kiddo-cache").then((cache) => {
       return cache.addAll([
-        '/kiddo-calculator/',
-        '/kiddo-calculator/index.html',
-        '/kiddo-calculator/style.css',
-        '/kiddo-calculator/script.js',
-        '/kiddo-calculator/icons/icon-192.png',
-        '/kiddo-calculator/icons/icon-512.png',
-        '/kiddo-calculator/manifest.json'
+        "/kiddo-calculator/",
+        "/kiddo-calculator/index.html",
+        "/kiddo-calculator/style.css",
+        "/kiddo-calculator/script.js",
       ]);
+    }).catch((err) => {
+      console.error("Cache error:", err);
     })
   );
 });
 
-self.addEventListener('fetch', function (e) {
+self.addEventListener("fetch", (e) => {
   e.respondWith(
-    caches.match(e.request).then(function (response) {
+    caches.match(e.request).then((response) => {
       return response || fetch(e.request);
     })
   );
