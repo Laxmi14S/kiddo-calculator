@@ -5,16 +5,16 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background: rgb(255, 230, 240);
+  background: linear-gradient(to right, #ffe0f0, #ffeef7);
 }
 
 .container {
-  background-color: white;
-  padding: 20px 25px;
+  background-color: #ffffff;
+  padding: 20px;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 320px;
   text-align: center;
-  width: 300px;
 }
 
 #display {
@@ -32,13 +32,13 @@ body {
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 button {
-  padding: 20px;
+  padding: 20px 0;
   font-size: 20px;
-  background-color: #ffaad4;
+  background-color: #ffb3da;
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -46,11 +46,11 @@ button {
 }
 
 button:hover {
-  background-color: #ff87c3;
+  background-color: #ff99cc;
 }
 
 button:active {
-  background-color: #f76aa0;
+  background-color: #ff66b2;
 }
 
 .footer {
