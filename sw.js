@@ -1,12 +1,24 @@
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open("kiddo-cache").then(cache => {
-      return cache.addAll(["./", "./index.html", "./style.css", "./script.js"]);
+self.addEventListener('install', function (e) {
+  e.waitUntil(
+    caches.open('kiddo-calculator-cache').then(function (cache) {
+      return cache.addAll([
+        '/',
+        '/kiddo-calculator/',
+        '/kiddo-calculator/index.html',
+        '/kiddo-calculator/style.css',
+        '/kiddo-calculator/script.js',
+        '/kiddo-calculator/icons/icon-192.png',
+        '/kiddo-calculator/icons/icon-512.png',
+        '/kiddo-calculator/manifest.json'
+      ]);
     })
   );
 });
-self.addEventListener('install', e => console.log('SW installed'));
-self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
 
+self.addEventListener('fetch', function (e) {
+  e.respondWith(
+    caches.match(e.request).then(function (response) {
+      return response || fetch(e.request);
+    })
+  );
 });
-
